@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 import {
   Image,
   View,
@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import logoImg from '../../assets/logo.png';
+import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
@@ -50,19 +51,25 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
 
-      // await api.post('/users', data);
-      // history.push('/');
+      await api.post('/users', data);
+
+      Alert.alert(
+        'Cadastro realizado com sucesso',
+        'Você já pode fazer login na aplicação',
+      );
+
+      navigation.goBack();
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
       }
-    }
 
-    Alert.alert(
-      'Erro no cadastro',
-      'Ocorreu um erro ao fazer o cadastro, tente nocamente',
-    );
+      Alert.alert(
+        'Erro no cadastro',
+        'Ocorreu um erro ao fazer o cadastro, tente novamente',
+      );
+    }
   }, []);
 
   return (
